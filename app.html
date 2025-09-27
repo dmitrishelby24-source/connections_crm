@@ -9,7 +9,40 @@
   <div id="app">Загрузка...</div>
   <script>
     BX24.init(function() {
-      document.getElementById('app').innerHTML = 'Приложение загружено. Настройки не заданы.';
+      // Получаем ID текущей компании
+      BX24.getCurrentEntityId(function(entityId) {
+        if (!entityId) {
+          document.getElementById('app').innerHTML = 'Не удалось получить ID компании';
+          return;
+        }
+
+        // Запрашиваем связанные компании
+        BX24.callMethod('crm.company.list', {
+          filter: {
+            'UF_CRM_12345678': entityId // ID поля связи
+          },
+          select: ['TITLE', 'PHONE', 'EMAIL']
+        }, function(result) {
+          if (result.error()) {
+            document.getElementById('app').innerHTML = 'Ошибка: ' + result.error().error_description;
+            return;
+          }
+
+          const companies = result.data;
+          if (companies.length === 0) {
+            document.getElementById('app').innerHTML = 'Связанных компаний нет';
+            return;
+          }
+
+          let html = '<table border="1"><tr><th>Название</th><th>Телефон</th><th>Email</th></tr>';
+          companies.forEach(company => {
+            html += `<tr><td>${company.TITLE || '-'}</td><td>${company.PHONE || '-'}</td><td>${company.EMAIL || '-'}</td></tr>`;
+          });
+          html += '</table>';
+
+          document.getElementById('app').innerHTML = html;
+        });
+      });
     });
   </script>
 </body>
