@@ -6,16 +6,12 @@
   "description": "Просмотр связанных компаний",
   "type": "application",
   "permissions": ["crm"],
-  "ui": {
-    "menu": {
-      "crm": {
-        "company": {
-          "title": "Связанные компании",
-          "url": "https://dmitrishelby24-source.github.io/connections_crm/app.html"
-        }
-      }
-    }
-  },
+  "placement": {
+   "CRM_COMPANY_DETAIL_TAB": {
+    "url": "https://dmitrishelby24-source.github.io/connections_crm/app.html",
+    "name": "Связанные компании"
+  }
+},
   "settings": {
     "url": "https://dmitrishelby24-source.github.io/connections_crm/settings.html"
   }
