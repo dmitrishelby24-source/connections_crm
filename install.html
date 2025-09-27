@@ -2,26 +2,35 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <title>Установка CRM Связки</title>
   <script src="https://api.bitrix24.com/api/v1/"></script>
 </head>
 <body>
+  <div id="status">Инициализация...</div>
   <script>
-    BX24.init(function() {
-      // Регистрируем вкладку
-      BX24.callMethod('placement.bind', {
-        PLACEMENT: 'CRM_COMPANY_DETAIL_TAB',
-        HANDLER: 'https://dmitrishelby24-source.github.io/connections_crm/app.html',
-        TITLE: 'Связанные компании'
-      }, function(result) {
-        if (result.error()) {
-          console.error('Ошибка регистрации вкладки:', result.error());
-        } else {
-          console.log('Вкладка зарегистрирована');
-        }
-        // Завершаем установку
-        BX24.installFinish();
+    // Проверка: загрузился ли BX24?
+    if (typeof BX24 === 'undefined') {
+      document.getElementById('status').innerHTML = '❌ BX24 не загружен. Откройте эту страницу только через установку в Битрикс24.';
+    } else {
+      document.getElementById('status').innerHTML = '✅ BX24 загружен. Регистрация вкладки...';
+      
+      BX24.init(function() {
+        BX24.callMethod('placement.bind', {
+          PLACEMENT: 'CRM_COMPANY_DETAIL_TAB',
+          HANDLER: 'https://dmitrishelby24-source.github.io/connections_crm/app.html',
+          TITLE: 'Связанные компании'
+        }, function(result) {
+          const statusEl = document.getElementById('status');
+          if (result.error()) {
+            statusEl.innerHTML = '❌ Ошибка: ' + result.error().error_description;
+            console.error('placement.bind error:', result.error());
+          } else {
+            statusEl.innerHTML = '✅ Вкладка зарегистрирована. Завершение установки...';
+            BX24.installFinish();
+          }
+        });
       });
-    });
+    }
   </script>
 </body>
 </html>
