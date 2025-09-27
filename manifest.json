@@ -7,11 +7,11 @@
   "type": "application",
   "permissions": ["crm"],
   "placement": {
-   "CRM_COMPANY_DETAIL_TAB": {
-    "url": "https://dmitrishelby24-source.github.io/connections_crm/app.html",
-    "name": "Связанные компании"
-  }
-},
+    "CRM_COMPANY_DETAIL_TAB": {
+      "url": "https://dmitrishelby24-source.github.io/connections_crm/app.html",
+      "name": "Связанные компании"
+    }
+  },
   "settings": {
     "url": "https://dmitrishelby24-source.github.io/connections_crm/settings.html"
   }
