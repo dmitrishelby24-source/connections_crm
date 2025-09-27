@@ -8,29 +8,54 @@
 <body>
   <div id="status">Инициализация...</div>
   <script>
-    // Проверка: загрузился ли BX24?
-    if (typeof BX24 === 'undefined') {
-      document.getElementById('status').innerHTML = '❌ BX24 не загружен. Откройте эту страницу только через установку в Битрикс24.';
-    } else {
-      document.getElementById('status').innerHTML = '✅ BX24 загружен. Регистрация вкладки...';
-      
-      BX24.init(function() {
+    // Гарантируем вызов installFinish в любом случае
+    function safeFinish() {
+      try {
+        if (typeof BX24 !== 'undefined' && BX24.installFinish) {
+          BX24.installFinish();
+        }
+      } catch (e) {
+        console.error('Не удалось вызвать installFinish:', e);
+      }
+    }
+
+    // Если страница открыта не во фрейме — выходим
+    if (window.top === window.self) {
+      document.getElementById('status').textContent = '❌ Откройте только через установку в Битрикс24';
+      setTimeout(safeFinish, 1000);
+      return;
+    }
+
+    // Ждём инициализации BX24
+    let initAttempts = 0;
+    const checkBX24 = setInterval(() => {
+      if (typeof BX24 !== 'undefined') {
+        clearInterval(checkBX24);
+        document.getElementById('status').textContent = '✅ BX24 готов. Регистрация вкладки...';
+
         BX24.callMethod('placement.bind', {
           PLACEMENT: 'CRM_COMPANY_DETAIL_TAB',
           HANDLER: 'https://dmitrishelby24-source.github.io/connections_crm/app.html',
           TITLE: 'Связанные компании'
         }, function(result) {
-          const statusEl = document.getElementById('status');
           if (result.error()) {
-            statusEl.innerHTML = '❌ Ошибка: ' + result.error().error_description;
             console.error('placement.bind error:', result.error());
+            document.getElementById('status').textContent = '⚠️ Ошибка регистрации, но установка завершена';
           } else {
-            statusEl.innerHTML = '✅ Вкладка зарегистрирована. Завершение установки...';
-            BX24.installFinish();
+            document.getElementById('status').textContent = '✅ Вкладка зарегистрирована';
           }
+          // В ЛЮБОМ случае завершаем установку
+          safeFinish();
         });
-      });
-    }
+      } else {
+        initAttempts++;
+        if (initAttempts > 10) {
+          clearInterval(checkBX24);
+          document.getElementById('status').textContent = '⚠️ BX24 не загружен. Установка завершена.';
+          safeFinish();
+        }
+      }
+    }, 500);
   </script>
 </body>
 </html>
