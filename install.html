@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://api.bitrix24.com/api/v1/"></script>
+</head>
+<body>
+  <script>
+    BX24.init(function() {
+      // Регистрируем вкладку
+      BX24.callMethod('placement.bind', {
+        PLACEMENT: 'CRM_COMPANY_DETAIL_TAB',
+        HANDLER: 'https://dmitrishelby24-source.github.io/connections_crm/app.html',
+        TITLE: 'Связанные компании'
+      }, function(result) {
+        if (result.error()) {
+          console.error('Ошибка регистрации вкладки:', result.error());
+        } else {
+          console.log('Вкладка зарегистрирована');
+        }
+        // Завершаем установку
+        BX24.installFinish();
+      });
+    });
+  </script>
+</body>
+</html>
