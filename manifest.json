@@ -1,0 +1,22 @@
+{
+  "id": "crm-connections",
+  "name": "CRM Связки",
+  "version": "1.0",
+  "author": "Dmitriy",
+  "description": "Просмотр связанных компаний",
+  "type": "application",
+  "permissions": ["crm"],
+  "ui": {
+    "menu": {
+      "crm": {
+        "company": {
+          "title": "Связанные компании",
+          "url": "https://dmitrishelby24-source.github.io/connections_crm/app.html"
+        }
+      }
+    }
+  },
+  "settings": {
+    "url": "https://dmitrishelby24-source.github.io/connections_crm/settings.html"
+  }
+}
