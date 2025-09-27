@@ -5,6 +5,7 @@
   "author": "Dmitriy",
   "description": "Просмотр связанных компаний",
   "type": "application",
+  "icon": "https://dmitrishelby24-source.github.io/connections_crm/icon.png",
   "permissions": ["crm"],
   "placement": {
     "CRM_COMPANY_DETAIL_TAB": {
