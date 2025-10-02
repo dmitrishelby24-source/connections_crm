@@ -9,42 +9,52 @@
   <div id="app">Загрузка...</div>
   <script>
     BX24.init(function() {
-      // Получаем ID текущей компании
-      BX24.getCurrentEntityId(function(entityId) {
-        if (!entityId) {
-          document.getElementById('app').innerHTML = 'Не удалось получить ID компании';
-          return;
-        }
-
-        // Запрашиваем связанные компании
-        BX24.callMethod('crm.company.list', {
-          filter: {
-            'UF_CRM_1758782866': entityId // ID поля связи
-          },
-          select: ['TITLE', 'PHONE', 'EMAIL']
-        }, function(result) {
-          if (result.error()) {
-            document.getElementById('app').innerHTML = 'Ошибка: ' + result.error().error_description;
+      // Получаем домен и ID компании
+      BX24.getDomain(function(domain) {
+        BX24.getCurrentEntityId(function(entityId) {
+          if (!entityId) {
+            document.getElementById('app').innerHTML = 'Не удалось получить ID компании';
             return;
           }
 
-          const companies = result.data;
-          if (companies.length === 0) {
-            document.getElementById('app').innerHTML = 'Связанных компаний нет';
-            return;
-          }
+          // Замените на ваш GAS URL
+          const GAS_URL = 'https://script.google.com/macros/s/AKfycbwOZ-tYjaivlp4NdPjnL8Wuxbv3K1dX_JWEsm51woT0fE_2LQ4SaJZ8hc7bnuXwTwlX/exec';
+          const url = `${GAS_URL}?domain=${domain}&mainCompanyId=${entityId}&fieldCode=UF_CRM_1758782866`;
 
-          let html = '<table border="1"><tr><th>Название</th><th>Телефон</th><th>Email</th></tr>';
-          companies.forEach(company => {
-            html += `<tr><td>${company.TITLE || '-'}</td><td>${company.PHONE || '-'}</td><td>${company.EMAIL || '-'}</td></tr>`;
-          });
-          html += '</table>';
+          fetch(url)
+            .then(res => res.json())
+            .then(data => {
+              if (data.error) {
+                document.getElementById('app').innerHTML = 'Ошибка: ' + data.error;
+                return;
+              }
 
-          document.getElementById('app').innerHTML = html;
+              const companies = data.result || [];
+              if (companies.length === 0) {
+                document.getElementById('app').innerHTML = 'Связанных компаний нет';
+                return;
+              }
+
+              let html = '<table border="1" style="width:100%;border-collapse:collapse;">';
+              html += '<tr><th>Название</th><th>Телефон</th><th>Email</th></tr>';
+              companies.forEach(co => {
+                const phone = co.PHONE?.[0]?.VALUE || '-';
+                const email = co.EMAIL?.[0]?.VALUE || '-';
+                html += `<tr><td>${co.TITLE || '-'}</td><td>${phone}</td><td>${email}</td></tr>`;
+              });
+              html += '</table>';
+              document.getElementById('app').innerHTML = html;
+            })
+            .catch(err => {
+              document.getElementById('app').innerHTML = 'Ошибка загрузки: ' + err.message;
+            });
         });
       });
     });
   </script>
 </body>
 </html>
+</body>
+</html>
+
 
