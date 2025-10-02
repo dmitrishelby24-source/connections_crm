@@ -6,14 +6,5 @@
   "description": "Просмотр связанных компаний",
   "type": "application",
   "icon": "https://dmitrishelby24-source.github.io/connections_crm/icon.png",
-  "permissions": ["crm"],
-  "placement": {
-    "CRM_COMPANY_DETAIL_TAB": {
-      "url": "https://dmitrishelby24-source.github.io/connections_crm/app.html",
-      "name": "Связанные компании"
-    }
-  },
-  "settings": {
-    "url": "https://dmitrishelby24-source.github.io/connections_crm/settings.html"
-  }
+  "permissions": ["crm"]
 }
